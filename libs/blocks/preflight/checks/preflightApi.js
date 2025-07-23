@@ -97,7 +97,6 @@ export async function getPreflightResults(options) {
     useCache = true,
     injectVisualMetadata = false,
   } = options || {};
-
   if (useCache && !injectVisualMetadata) {
     // Cache calls for without visual metadata
     if (!checks) checks = runChecks(url, area, injectVisualMetadata);
