@@ -1,4 +1,6 @@
-import { STATUS, SEO_TITLES, SEO_IDS, SEO_DESCRIPTIONS } from './constants.js';
+import {
+  STATUS, CHECKS, SEO_TITLES, SEO_IDS, SEO_DESCRIPTIONS,
+} from './constants.js';
 import getServiceConfig from '../../../utils/service-config.js';
 import { getConfig, updateConfig } from '../../../utils/utils.js';
 
@@ -46,7 +48,9 @@ export function checkH1s(area) {
   }
 
   return {
+    checkId: CHECKS.H1_COUNT.id,
     id: SEO_IDS.h1Count,
+    severity: CHECKS.H1_COUNT.severity,
     title: SEO_TITLES.h1Count,
     status,
     description,
@@ -70,7 +74,9 @@ export function checkTitle(area) {
   }
 
   return {
+    checkId: CHECKS.TITLE_SIZE.id,
     id: SEO_IDS.title,
+    severity: CHECKS.TITLE_SIZE.severity,
     title: SEO_TITLES.title,
     status,
     description,
@@ -106,7 +112,9 @@ export async function checkCanon(area) {
   }
 
   return {
+    checkId: CHECKS.CANONICAL.id,
     id: SEO_IDS.canonical,
+    severity: CHECKS.CANONICAL.severity,
     title: SEO_TITLES.canonical,
     status,
     description,
@@ -136,7 +144,9 @@ export async function checkDescription(area) {
   }
 
   return {
-    id: SEO_IDS.description,
+    checkId: CHECKS.META_DESCRIPTION.id,
+    id: SEO_IDS.description, // ASO compatibility
+    severity: CHECKS.META_DESCRIPTION.severity,
     title: SEO_TITLES.description,
     status,
     description,
@@ -157,7 +167,9 @@ export async function checkBody(area) {
   }
 
   return {
+    checkId: CHECKS.BODY_SIZE.id,
     id: SEO_IDS.bodySize,
+    severity: CHECKS.BODY_SIZE.severity,
     title: SEO_TITLES.bodySize,
     status,
     description,
@@ -179,7 +191,9 @@ export async function checkLorem(area) {
   }
 
   return {
+    checkId: CHECKS.LOREM_IPSUM.id,
     id: SEO_IDS.loremIpsum,
+    severity: CHECKS.LOREM_IPSUM.severity,
     title: SEO_TITLES.loremIpsum,
     status,
     description,
@@ -194,7 +208,9 @@ function makeGroups(arr, n = 20) {
 
 export function connectionError() {
   return {
+    checkId: CHECKS.BROKEN_LINKS.id,
     id: SEO_IDS.links,
+    severity: CHECKS.BROKEN_LINKS.severity,
     title: SEO_TITLES.links,
     status: STATUS.LIMBO,
     description: 'A VPN connection is required to use the link check service. Please turn on VPN and refresh the page.',
@@ -317,7 +333,9 @@ export async function checkLinks({ area, urlHash, envName }) {
     : SEO_DESCRIPTIONS.links;
 
   const result = {
+    checkId: CHECKS.BROKEN_LINKS.id,
     id: SEO_IDS.links,
+    severity: CHECKS.BROKEN_LINKS.severity,
     title: SEO_TITLES.links,
     status,
     description,
@@ -329,8 +347,10 @@ export async function checkLinks({ area, urlHash, envName }) {
   }
 
   const hasFailures = status === STATUS.FAIL;
-  const event = new CustomEvent('preflightLinksComplete', { detail: { result, hasFailures } });
-  window.dispatchEvent(event);
+  window.dispatchEvent(new CustomEvent('preflightLinksComplete', {
+    detail: { hasFailures }
+  }));
+
   return result;
 }
 
