@@ -19,6 +19,8 @@ import { Mini, MINI_AEM_FRAGMENT_MAPPING } from './mini.js';
 // Registry for dynamic variants
 const variantRegistry = new Map();
 
+const variantState = new WeakMap();
+
 // Function to register a new variant
 export const registerVariant = (
     name,
@@ -74,18 +76,58 @@ const getVariantLayout = (card) => {
         return undefined;
     }
     const { class: VariantClass, style } = variantInfo;
+    
+    const state = variantState.get(card);
+    if (state?.appliedVariant === card.variant) {
+        return new VariantClass(card);
+    }
+    
+    // Apply styles only if needed
     if (style) {
         try {
             const sheet = new CSSStyleSheet();
             sheet.replaceSync(style.cssText);
+            
+            if (state?.styleSheet) {
+                const index = card.shadowRoot.adoptedStyleSheets.indexOf(state.styleSheet);
+                if (index !== -1) {
+                    card.shadowRoot.adoptedStyleSheets.splice(index, 1);
+                }
+            }
+            
             card.shadowRoot.adoptedStyleSheets.push(sheet);
+            
+            // Update state in WeakMap
+            variantState.set(card, {
+                appliedVariant: card.variant,
+                styleSheet: sheet
+            });
         } catch (e) {
-            // If CSSStyleSheet constructor fails, fall back to style element
+            // Fallback for browsers that don't support CSSStyleSheet constructor
             const styleElement = document.createElement('style');
             styleElement.textContent = style.cssText;
+            styleElement.setAttribute('data-variant-style', card.variant);
+            
+            if (state?.styleElement) {
+                state.styleElement.remove();
+            } else {
+                const existing = card.shadowRoot.querySelector('[data-variant-style]');
+                if (existing) existing.remove();
+            }
+            
             card.shadowRoot.appendChild(styleElement);
+            
+            variantState.set(card, {
+                appliedVariant: card.variant,
+                styleElement: styleElement
+            });
         }
+    } else {
+        variantState.set(card, {
+            appliedVariant: card.variant
+        });
     }
+    
     return new VariantClass(card);
 };
 
