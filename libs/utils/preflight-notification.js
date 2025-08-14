@@ -85,7 +85,7 @@ function createObserver() {
       }
       return;
     }
-
+    // Check if sidekick is open and we should show notification
     if (sidekick.getAttribute('open') === 'true' && !wasDismissed) {
       const { hasFailures } = await getPreflightResults({
         url: window.location.href,
