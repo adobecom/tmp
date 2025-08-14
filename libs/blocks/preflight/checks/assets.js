@@ -1,5 +1,6 @@
-import { STATUS, ASSETS_TITLES } from './constants.js';
+import { STATUS, SEVERITY, CHECKS } from './constants.js';
 import { createTag } from '../../../utils/utils.js';
+import { addAssetMetadata } from '../visual-metadata.js';
 
 const maxFullWidth = 1920;
 const assetsCache = new Map();
@@ -145,70 +146,37 @@ function getAssetData(asset) {
   };
 }
 
-function populateAssetMeta(asset, assetData) {
-  // Check for or define an asset meta element to display analysis results
-  let assetMetaParent;
-  switch (assetData.type) {
-    case 'video':
-      if (asset.closest('.video-holder')) {
-        assetMetaParent = '.video-holder';
-      } else {
-        const videoParent = asset.parentElement;
-        videoParent.style.position = 'relative';
-        assetMetaParent = videoParent.tagName;
-      }
-      break;
-    case 'mpc':
-      assetMetaParent = '.milo-video';
-      break;
-    default:
-      assetMetaParent = 'picture';
-      break;
-  }
-  let assetMetaElem = asset.closest(assetMetaParent).querySelector('.asset-meta');
+// Determine if an asset is above-the-fold and should be considered critical
+function isAboveFold(asset) {
+  const main = asset.closest('main');
 
-  if (!assetMetaElem) {
-    assetMetaElem = createTag('div', { class: 'asset-meta' });
-    asset.closest(assetMetaParent).insertBefore(assetMetaElem, asset.nextSibling);
-  }
+  const firstSection = main?.querySelector(':scope > div.section:first-of-type');
+  const secondSection = main?.querySelector(':scope > div.section:nth-of-type(2)');
+  const hasSection = !!firstSection;
 
-  const sizeMsg = createTag(
-    'div',
-    { class: `asset-meta-entry preflight-decoration ${assetData.hasMismatch ? 'is-invalid' : 'is-valid'}` },
-    assetData.hasMismatch
-      ? `Size: too small, use > ${assetData.recommendedDimensions}`
-      : 'Size: correct',
-  );
-  assetMetaElem.append(sizeMsg);
-
-  if (assetData.type === 'mpc') {
-    const { title } = asset;
-    const titleMsg = createTag(
-      'div',
-      { class: `asset-meta-entry preflight-decoration ${!title.length ? 'is-invalid' : 'is-valid'}` },
-      title.length
-        ? `Title: ${title}`
-        : 'Title: no title',
-    );
-    assetMetaElem.append(titleMsg);
-  }
+  return !hasSection
+    || firstSection?.contains(asset)
+    || secondSection?.contains(asset)
+    || !!asset.closest('.hero, .marquee, .hero-marquee');
 }
-
 export function isViewportTooSmall() {
   return !window.matchMedia('(min-width: 1200px)').matches;
 }
 
-export async function checkImageDimensions(url, area, injectVisualMetadata) {
+export async function checkImageDimensions(url, area, injectVisualMetadata = false) {
   if (isViewportTooSmall()) {
     return {
-      title: ASSETS_TITLES.AssetDimensions,
+      checkId: CHECKS.IMAGE_DIMENSIONS.id,
+      severity: CHECKS.IMAGE_DIMENSIONS.severity,
+      title: CHECKS.IMAGE_DIMENSIONS.title,
       status: STATUS.EMPTY,
       description: 'Viewport is too small to run asset checks (minimum width: 1200px).',
     };
   }
 
-  if (assetsCache.has(url)) {
-    const cachedResult = assetsCache.get(url);
+  const cacheKey = `${url}_${injectVisualMetadata}`;
+  if (assetsCache.has(cacheKey)) {
+    const cachedResult = assetsCache.get(cacheKey);
     return JSON.parse(JSON.stringify(cachedResult));
   }
 
@@ -220,7 +188,9 @@ export async function checkImageDimensions(url, area, injectVisualMetadata) {
 
   if (!allAssets.length) {
     return {
-      title: ASSETS_TITLES.AssetDimensions,
+      checkId: CHECKS.IMAGE_DIMENSIONS.id,
+      severity: CHECKS.IMAGE_DIMENSIONS.severity,
+      title: CHECKS.IMAGE_DIMENSIONS.title,
       status: STATUS.EMPTY,
       description: 'No assets found in the main content.',
     };
@@ -230,50 +200,108 @@ export async function checkImageDimensions(url, area, injectVisualMetadata) {
 
   if (!assets.length) {
     return {
-      title: ASSETS_TITLES.AssetDimensions,
+      checkId: CHECKS.IMAGE_DIMENSIONS.id,
+      severity: CHECKS.IMAGE_DIMENSIONS.severity,
+      title: CHECKS.IMAGE_DIMENSIONS.title,
       status: STATUS.EMPTY,
       description: 'No eligible assets found (visible, non-icon, non-SVG).',
     };
   }
 
+  // Initialize arrays for both ASO and notification support
   const assetsWithMismatch = [];
   const assetsWithMatch = [];
+  const criticalAssetFailures = [];
+  const warningAssetFailures = [];
 
   if (injectVisualMetadata) area.body.classList.add('preflight-assets-analysis');
 
-  for (const asset of assets) {
+  const processedAssets = assets.map((asset) => {
     const assetData = getAssetData(asset);
-    if (injectVisualMetadata) populateAssetMeta(asset, assetData);
+    const isAssetAboveFold = isAboveFold(asset);
+    assetData.isAboveFold = isAssetAboveFold;
 
+    // Add failure classification and populate arrays for both approaches
     if (assetData.hasMismatch) {
+      assetData.failure = isAssetAboveFold ? 'critical' : 'warning';
       assetsWithMismatch.push(assetData);
+
+      if (isAssetAboveFold) {
+        criticalAssetFailures.push(assetData);
+      } else {
+        warningAssetFailures.push(assetData);
+      }
     } else {
+      assetData.failure = null;
       assetsWithMatch.push(assetData);
     }
-  }
+
+    if (injectVisualMetadata) addAssetMetadata(asset, assetData);
+
+    return assetData;
+  });
 
   if (injectVisualMetadata) area.body.classList.remove('preflight-assets-analysis');
 
+  // Status determination that supports both notification popup and ASO approaches
+  const getStatus = () => {
+    const criticalCount = processedAssets.filter(
+      (check) => check.failure === 'critical',
+    ).length;
+    const warningCount = processedAssets.filter(
+      (check) => check.failure === 'warning',
+    ).length;
+
+    if (criticalCount === 0 && warningCount === 0) {
+      return {
+        checkId: CHECKS.IMAGE_DIMENSIONS.id,
+        severity: CHECKS.IMAGE_DIMENSIONS.severity,
+        description: 'All assets have matching dimensions.',
+        status: STATUS.PASS,
+      };
+    }
+
+    if (criticalCount > 0) {
+      const criticalMsg = `${criticalCount} above-the-fold asset(s) have dimension mismatches (critical).`;
+      const warningMsg = warningCount > 0 ? ` ${warningCount} below-the-fold asset(s) also have issues.` : '';
+      return {
+        checkId: CHECKS.IMAGE_DIMENSIONS.id,
+        severity: SEVERITY.CRITICAL,
+        description: criticalMsg + warningMsg,
+        status: STATUS.FAIL,
+      };
+    }
+
+    return {
+      checkId: CHECKS.IMAGE_DIMENSIONS.id,
+      severity: SEVERITY.WARNING,
+      description: `${warningCount} below-the-fold asset(s) have dimension mismatches.`,
+      status: STATUS.LIMBO,
+    };
+  };
+
+  const status = getStatus();
+
   const result = {
-    title: ASSETS_TITLES.AssetDimensions,
-    status: assetsWithMismatch.length > 0 ? STATUS.FAIL : STATUS.PASS,
-    description:
-      assetsWithMismatch.length > 0
-        ? `${assetsWithMismatch.length} asset(s) have dimension mismatches.`
-        : 'All assets have matching dimensions.',
+    ...status,
+    title: CHECKS.IMAGE_DIMENSIONS.title,
     details: {
+      assets: processedAssets,
       assetsWithMismatch,
       assetsWithMatch,
+      criticalAssetFailures,
+      warningAssetFailures,
     },
   };
 
-  if (result.status === STATUS.PASS || result.status === STATUS.FAIL) {
-    assetsCache.set(url, JSON.parse(JSON.stringify(result)));
+  const validStatuses = [STATUS.PASS, STATUS.FAIL, STATUS.LIMBO];
+  if (validStatuses.includes(result.status)) {
+    assetsCache.set(cacheKey, JSON.parse(JSON.stringify(result)));
   }
 
   return result;
 }
 
-export function runChecks(url, area, injectVisualMetadata) {
+export function runChecks(url, area, injectVisualMetadata = false) {
   return [checkImageDimensions(url, area, injectVisualMetadata)];
 }
