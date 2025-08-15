@@ -70,63 +70,53 @@ registerVariant(
     Mini.variantStyle,
 );
 
+const applyStyleSheet = (card, style, state) => {
+    try {
+        const sheet = new CSSStyleSheet();
+        sheet.replaceSync(style.cssText);
+        
+        // Remove old sheet if exists
+        if (state?.styleSheet) {
+            const index = card.shadowRoot.adoptedStyleSheets.indexOf(state.styleSheet);
+            if (index !== -1) {
+                card.shadowRoot.adoptedStyleSheets.splice(index, 1);
+            }
+        }
+        
+        card.shadowRoot.adoptedStyleSheets.push(sheet);
+        return { styleSheet: sheet };
+    } catch (e) {
+        // Fallback for browsers without CSSStyleSheet constructor
+        const styleElement = document.createElement('style');
+        styleElement.textContent = style.cssText;
+        styleElement.setAttribute('data-variant-style', card.variant);
+        
+        // Remove old style element
+        const oldElement = state?.styleElement || 
+                          card.shadowRoot.querySelector('[data-variant-style]');
+        if (oldElement) oldElement.remove();
+        
+        card.shadowRoot.appendChild(styleElement);
+        return { styleElement };
+    }
+};
+
 const getVariantLayout = (card) => {
     const variantInfo = variantRegistry.get(card.variant);
-    if (!variantInfo) {
-        return undefined;
-    }
-    const { class: VariantClass, style } = variantInfo;
+    if (!variantInfo) return undefined;
     
+    const { class: VariantClass, style } = variantInfo;
     const state = variantState.get(card);
+    
     if (state?.appliedVariant === card.variant) {
         return new VariantClass(card);
     }
     
-    // Apply styles only if needed
-    if (style) {
-        try {
-            const sheet = new CSSStyleSheet();
-            sheet.replaceSync(style.cssText);
-            
-            if (state?.styleSheet) {
-                const index = card.shadowRoot.adoptedStyleSheets.indexOf(state.styleSheet);
-                if (index !== -1) {
-                    card.shadowRoot.adoptedStyleSheets.splice(index, 1);
-                }
-            }
-            
-            card.shadowRoot.adoptedStyleSheets.push(sheet);
-            
-            // Update state in WeakMap
-            variantState.set(card, {
-                appliedVariant: card.variant,
-                styleSheet: sheet
-            });
-        } catch (e) {
-            // Fallback for browsers that don't support CSSStyleSheet constructor
-            const styleElement = document.createElement('style');
-            styleElement.textContent = style.cssText;
-            styleElement.setAttribute('data-variant-style', card.variant);
-            
-            if (state?.styleElement) {
-                state.styleElement.remove();
-            } else {
-                const existing = card.shadowRoot.querySelector('[data-variant-style]');
-                if (existing) existing.remove();
-            }
-            
-            card.shadowRoot.appendChild(styleElement);
-            
-            variantState.set(card, {
-                appliedVariant: card.variant,
-                styleElement: styleElement
-            });
-        }
-    } else {
-        variantState.set(card, {
-            appliedVariant: card.variant
-        });
-    }
+    const styleState = style ? applyStyleSheet(card, style, state) : {};
+    variantState.set(card, {
+        appliedVariant: card.variant,
+        ...styleState
+    });
     
     return new VariantClass(card);
 };
