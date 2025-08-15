@@ -1768,11 +1768,16 @@ export async function loadArea(area = document) {
   const areaBlocks = [];
   let lcpSectionId = null;
 
+  const lcpImageSectionIndex = sections.findIndex((section) => section.blocks.some((block) => block.classList.contains('lcp-image')));
+
   for (const section of sections) {
     const isLastSection = section.idx === sections.length - 1;
-    if (lcpSectionId === null && (section.blocks.length !== 0 || isLastSection)) {
-      lcpSectionId = section.el.querySelector('.hero-marquee .foreground-media') ? section.idx : section.idx + 1;
+
+    if ((lcpImageSectionIndex && lcpImageSectionIndex !== -1)
+       || (lcpSectionId === null && (section.blocks.length !== 0 || isLastSection))) {
+      lcpSectionId = lcpImageSectionIndex !== -1 ? lcpImageSectionIndex : section.idx;
     }
+
     const sectionBlocks = await processSection(section, config, isDoc, lcpSectionId);
     areaBlocks.push(...sectionBlocks);
 
