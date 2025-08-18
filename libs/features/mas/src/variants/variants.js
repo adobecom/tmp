@@ -21,6 +21,9 @@ const variantRegistry = new Map();
 
 const variantState = new WeakMap();
 
+// Cache for variant stylesheets to avoid duplicates
+const variantStyleSheets = new Map();
+
 // Function to register a new variant
 export const registerVariant = (
     name,
@@ -72,18 +75,25 @@ registerVariant(
 
 const applyStyleSheet = (card, style, state) => {
     try {
-        const sheet = new CSSStyleSheet();
-        sheet.replaceSync(style.cssText);
+        let sheet = variantStyleSheets.get(card.variant);
+        if (!sheet) {
+            sheet = new CSSStyleSheet();
+            sheet.replaceSync(style.cssText);
+            variantStyleSheets.set(card.variant, sheet);
+        }
         
-        // Remove old sheet if exists
-        if (state?.styleSheet) {
+        // Remove old sheet if exists and it's different
+        if (state?.styleSheet && state.styleSheet !== sheet) {
             const index = card.shadowRoot.adoptedStyleSheets.indexOf(state.styleSheet);
             if (index !== -1) {
                 card.shadowRoot.adoptedStyleSheets.splice(index, 1);
             }
         }
         
-        card.shadowRoot.adoptedStyleSheets.push(sheet);
+        if (!card.shadowRoot.adoptedStyleSheets.includes(sheet)) {
+            card.shadowRoot.adoptedStyleSheets.push(sheet);
+        }
+        
         return { styleSheet: sheet };
     } catch (e) {
         // Fallback for browsers without CSSStyleSheet constructor
