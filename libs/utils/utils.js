@@ -581,6 +581,7 @@ export function loadLink(href, {
       link.onload = (e) => callback(e.type);
       link.onerror = (e) => callback(e.type);
     }
+    console.log('link', link);
     document.head.appendChild(link);
   } else if (callback) {
     callback('noop');
@@ -1774,7 +1775,7 @@ export async function loadArea(area = document) {
       isMarqueeAndNoMedia = section.el.querySelector('.hero-marquee.no-media, .marquee.no-media, .quiz-marquee.no-media');
     }
 
-    if (isMarqueeAndNoMedia && section.idx === 0) {
+    if (isMarqueeAndNoMedia && section.idx === 1) {
       const imgs = section.el.querySelectorAll('img');
       imgs.forEach((img) => {
         loadLink(img.src, { fetchpriority: 'high', rel: 'preload', as: 'image' });
