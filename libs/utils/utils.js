@@ -1774,7 +1774,7 @@ export async function loadArea(area = document) {
       isMarqueeAndNoMedia = section.el.querySelector('.hero-marquee.no-media, .marquee.no-media, .quiz-marquee.no-media');
     }
 
-    if (isMarqueeAndNoMedia && section.idx === 1) {
+    if (isMarqueeAndNoMedia && section.idx === 0) {
       const imgs = section.el.querySelectorAll('img');
       imgs.forEach((img) => {
         img.setAttribute('loading', 'eager');
