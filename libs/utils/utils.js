@@ -1777,6 +1777,7 @@ export async function loadArea(area = document) {
     if (isMarqueeAndNoMedia && section.idx === 0) {
       const imgs = section.el.querySelectorAll('img');
       imgs.forEach((img) => {
+        loadLink(img.src, { fetchpriority: 'high', rel: 'preload', as: 'image' });
         img.setAttribute('loading', 'eager');
         img.setAttribute('fetchpriority', 'high');
       });
@@ -1784,7 +1785,7 @@ export async function loadArea(area = document) {
 
     const isLastSection = section.idx === sections.length - 1;
     if (lcpSectionId === null && (section.blocks.length !== 0 || isLastSection)) {
-      lcpSectionId = section.idx;
+      lcpSectionId = isMarqueeAndNoMedia ? section.idx + 1 : section.idx;
     }
 
     const sectionBlocks = await processSection(section, config, isDoc, lcpSectionId);
