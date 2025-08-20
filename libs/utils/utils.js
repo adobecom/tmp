@@ -1784,7 +1784,7 @@ export async function loadArea(area = document) {
 
     const isLastSection = section.idx === sections.length - 1;
     if (lcpSectionId === null && (section.blocks.length !== 0 || isLastSection)) {
-      lcpSectionId = !isMarqueeAndNoMedia ? section.idx : section.idx + 1;
+      lcpSectionId = section.idx;
     }
 
     const sectionBlocks = await processSection(section, config, isDoc, lcpSectionId);
