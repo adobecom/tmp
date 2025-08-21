@@ -146,7 +146,10 @@ function getAssetData(asset) {
   };
 }
 
+<<<<<<< HEAD
 // Determine if an asset is above-the-fold and should be considered critical
+=======
+>>>>>>> fd2c6ba52 (fixed unadded changes from the rebasing)
 function isAboveFold(asset) {
   const main = asset.closest('main');
 
@@ -159,6 +162,10 @@ function isAboveFold(asset) {
     || secondSection?.contains(asset)
     || !!asset.closest('.hero, .marquee, .hero-marquee');
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> fd2c6ba52 (fixed unadded changes from the rebasing)
 export function isViewportTooSmall() {
   return !window.matchMedia('(min-width: 1200px)').matches;
 }
@@ -221,7 +228,10 @@ export async function checkImageDimensions(url, area, injectVisualMetadata = fal
     const isAssetAboveFold = isAboveFold(asset);
     assetData.isAboveFold = isAssetAboveFold;
 
+<<<<<<< HEAD
     // Add failure classification and populate arrays for both approaches
+=======
+>>>>>>> fd2c6ba52 (fixed unadded changes from the rebasing)
     if (assetData.hasMismatch) {
       assetData.failure = isAssetAboveFold ? 'critical' : 'warning';
       assetsWithMismatch.push(assetData);
