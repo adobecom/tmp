@@ -1,6 +1,10 @@
+<<<<<<< HEAD
 import {
   STATUS, CHECKS, SEO_TITLES, SEO_IDS, SEO_DESCRIPTIONS,
 } from './constants.js';
+=======
+import { STATUS, CHECKS, SEVERITY } from './constants.js';
+>>>>>>> 95a5e934b (fix: notification not showing when Links are the only failing (critical) checks)
 import getServiceConfig from '../../../utils/service-config.js';
 import { getConfig, updateConfig } from '../../../utils/utils.js';
 
