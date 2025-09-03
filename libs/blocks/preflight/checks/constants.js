@@ -36,7 +36,40 @@ export const SEVERITY = {
   WARNING: 'warning',
 };
 
+<<<<<<< HEAD
 // CHECKS constant for structured check definitions (supports notification popup)
+=======
+export const SEO_TITLES = {
+  h1Count: 'H1 count',
+  title: 'Title size',
+  canonical: 'Canonical',
+  description: 'Meta description',
+  bodySize: 'Body size',
+  loremIpsum: 'Lorem Ipsum',
+  links: 'Links',
+};
+
+export const SEO_IDS = {
+  title: 'title',
+  description: 'description',
+  h1Count: 'h1-count',
+  canonical: 'canonical',
+  bodySize: 'body-size',
+  loremIpsum: 'lorem-ipsum',
+  links: 'links',
+};
+
+export const SEO_DESCRIPTIONS = {
+  title: 'Title size is appropriate.',
+  description: 'Meta description is present and within the recommended character limit.',
+  h1Count: 'Found exactly one H1 heading.',
+  canonical: 'Canonical reference is valid.',
+  bodySize: 'Body content has a good length.',
+  loremIpsum: 'No Lorem ipsum is used on the page.',
+  links: 'Links are valid.',
+};
+
+>>>>>>> f14f1de55 ([MWPW-177278] [Preflight] ASO Preflight conditioned by federal config (#4641))
 export const CHECKS = {
   H1_COUNT: {
     id: 'h1-count',
@@ -120,6 +153,7 @@ export const CHECKS = {
   },
 };
 
+<<<<<<< HEAD
 // Title constants for performance checks (supports ASO)
 export const PERFORMANCE_TITLES = {
   LcpEl: 'LCP',
@@ -163,6 +197,8 @@ export const SEO_DESCRIPTIONS = {
   links: 'Links are valid.',
 };
 
+=======
+>>>>>>> f14f1de55 ([MWPW-177278] [Preflight] ASO Preflight conditioned by federal config (#4641))
 export const ASSETS_TITLES = { AssetDimensions: 'Asset Dimensions' };
 
 export const ASO_TIMEOUT_MS = 60_000;
