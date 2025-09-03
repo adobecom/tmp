@@ -30,6 +30,8 @@ let checks = null;
 
 let checksSuite = null;
 
+let checksSuite = null;
+
 export default {
   assets: {
     isViewportTooSmall,
