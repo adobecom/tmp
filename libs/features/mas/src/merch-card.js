@@ -249,18 +249,18 @@ export class MerchCard extends LitElement {
     return this.variantLayout.renderLayout();
   }
 
-  get computedBorderStyle() {
-    if (
-      !['ccd-slice', 'ccd-suggested', 'ah-promoted-plans'].includes(
-        this.variant,
-      )
-    ) {
-      return `1px solid ${
-        this.borderColor ? this.borderColor : this.badgeBackgroundColor
-      }`;
+    get computedBorderStyle() {
+        if (
+            !['ccd-slice', 'ccd-suggested', 'ah-promoted-plans', 'simplified-pricing-express'].includes(
+                this.variant,
+            )
+        ) {
+            return `1px solid ${
+                this.borderColor ? this.borderColor : this.badgeBackgroundColor
+            }`;
+        }
+        return '';
     }
-    return '';
-  }
 
   get badgeElement() {
     return this.shadowRoot.getElementById('badge');
