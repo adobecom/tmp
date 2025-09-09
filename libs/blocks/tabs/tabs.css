@@ -524,7 +524,7 @@
     flex-direction: row;
     align-items: center;
     border-radius: 40px;
-    padding-block: 0;
+    padding-block: 5px;
     padding-inline: var(--spacing-s);
     inline-size: auto;
     max-inline-size: var(--grid-container-width);
