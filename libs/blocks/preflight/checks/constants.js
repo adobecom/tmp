@@ -73,12 +73,12 @@ export const SEO_DESCRIPTIONS = {
 export const CHECKS = {
   H1_COUNT: {
     id: 'h1-count',
-    severity: SEVERITY.WARNING,
+    severity: SEVERITY.CRITICAL,
     title: 'H1 count',
   },
   TITLE_SIZE: {
     id: 'title-size',
-    severity: SEVERITY.WARNING,
+    severity: SEVERITY.CRITICAL,
     title: 'Title size',
   },
   CANONICAL: {
@@ -88,12 +88,12 @@ export const CHECKS = {
   },
   META_DESCRIPTION: {
     id: 'meta-description',
-    severity: SEVERITY.WARNING,
+    severity: SEVERITY.CRITICAL,
     title: 'Meta description',
   },
   BODY_SIZE: {
     id: 'body-size',
-    severity: SEVERITY.WARNING,
+    severity: SEVERITY.CRITICAL,
     title: 'Body size',
   },
   LOREM_IPSUM: {
