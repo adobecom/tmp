@@ -99,6 +99,7 @@
 .milo-tooltip:focus::before,
 .milo-tooltip:active::before {
   display: block; 
+  z-index: 9999;
 }
 
 .milo-tooltip:hover::after,
