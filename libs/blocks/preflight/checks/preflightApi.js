@@ -30,8 +30,6 @@ let checks = null;
 
 let checksSuite = null;
 
-let checksSuite = null;
-
 export default {
   assets: {
     isViewportTooSmall,
@@ -90,20 +88,6 @@ const runChecks = async (url, area, injectVisualMetadata = false) => {
   return { assets, performance, seo };
 };
 
-const processResults = (results) => {
-  const allResults = [
-    ...(results.assets || []),
-    ...(results.performance || []),
-    ...(results.seo || []),
-  ];
-
-  return {
-    isViewportTooSmall: isViewportTooSmall(),
-    runChecks: results,
-    hasFailures: allResults.some((result) => result.status === 'fail' && (result.severity === SEVERITY.CRITICAL || !result.severity)),
-  };
-};
-
 export async function getPreflightResults(options) {
   const {
     url,
@@ -111,14 +95,33 @@ export async function getPreflightResults(options) {
     useCache = true,
     injectVisualMetadata = false,
   } = options || {};
-  
+
   if (useCache && !injectVisualMetadata) {
     // Cache calls for without visual metadata
     if (!checks) checks = runChecks(url, area, injectVisualMetadata);
     const cachedChecks = await checks;
-    return processResults(cachedChecks);
+    const allResults = [
+      ...(cachedChecks.assets || []),
+      ...(cachedChecks.performance || []),
+      ...(cachedChecks.seo || []),
+    ];
+    return {
+      isViewportTooSmall: isViewportTooSmall(),
+      runChecks: cachedChecks,
+      hasFailures: allResults.some((result) => result.status === 'fail' && result.severity === SEVERITY.CRITICAL),
+    };
   }
 
   const res = await runChecks(url, area, injectVisualMetadata);
-  return processResults(res);
+  const allResults = [
+    ...(res.assets || []),
+    ...(res.performance || []),
+    ...(res.seo || []),
+  ];
+
+  return {
+    isViewportTooSmall: isViewportTooSmall(),
+    runChecks: res,
+    hasFailures: allResults.some((result) => result.status === 'fail' && result.severity === SEVERITY.CRITICAL),
+  };
 }
