@@ -105,7 +105,7 @@
   @supports (font: -apple-system-body) and (not (selector(:has(*)))) { */
     /* Safari 17 and below only */
     .milo-tooltip:focus::before {
-      outline: 2px solid #2684FF;
+      outline: 4px solid #2684FF;
       outline-offset: 2px;
     }
   /* }
