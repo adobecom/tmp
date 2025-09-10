@@ -101,11 +101,11 @@
   display: block; 
 }
 
+/* Safari 17 & below only */
 @supports (-webkit-backdrop-filter: blur(5px)) and (not (backdrop-filter: blur(5px))) {
-  /* Safari 17 only */
-    .milo-tooltip:focus::before {
-      outline: 4px solid #7caff5;
-      outline-offset: 1px;
+  .milo-tooltip:focus::before {
+    outline: 4px solid #7caff5;
+    outline-offset: 1px;
   }
 }
 
