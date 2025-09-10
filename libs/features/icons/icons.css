@@ -99,8 +99,18 @@
 .milo-tooltip:focus::before,
 .milo-tooltip:active::before {
   display: block; 
-  z-index: 9999;
 }
+
+@media not all and (min-resolution: 0.001dpcm) {
+  @supports (font: -apple-system-body) and (not (selector(:has(*)))) {
+    /* Safari 17 and below only */
+    .milo-tooltip:focus {
+      outline: 2px solid #2684FF;
+      outline-offset: 2px;
+    }
+  }
+}
+
 
 .milo-tooltip:hover::after,
 .milo-tooltip:focus::after,
