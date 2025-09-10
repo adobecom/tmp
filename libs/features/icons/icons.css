@@ -101,16 +101,13 @@
   display: block; 
 }
 
-@media not all and (min-resolution: 0.001dpcm) {
-  @supports (font: -apple-system-body) and (not (selector(:has(*)))) {
-    /* Safari 17 and below only */
+@supports (-webkit-backdrop-filter: blur(5px)) and (not (backdrop-filter: blur(5px))) {
+  /* Safari 17 only */
     .milo-tooltip:focus::before {
       outline: 4px solid #2684FF;
       outline-offset: 2px;
-    }
   }
 }
-
 
 .milo-tooltip:hover::after,
 .milo-tooltip:focus::after,
