@@ -101,15 +101,15 @@
   display: block; 
 }
 
-/* @media not all and (min-resolution: 0.001dpcm) {
-  @supports (font: -apple-system-body) and (not (selector(:has(*)))) { */
+@media not all and (min-resolution: 0.001dpcm) {
+  @supports (font: -apple-system-body) and (not (selector(:has(*)))) {
     /* Safari 17 and below only */
     .milo-tooltip:focus::before {
       outline: 4px solid #2684FF;
       outline-offset: 2px;
     }
-  /* }
-} */
+  }
+}
 
 
 .milo-tooltip:hover::after,
