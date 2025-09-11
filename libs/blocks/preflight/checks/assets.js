@@ -1,4 +1,4 @@
-import { STATUS, SEVERITY, CHECKS } from './constants.js';
+import { STATUS, SEVERITY, ASSETS_TITLES, ASSETS_IDS, ASSETS_SEVERITIES } from './constants.js';
 import { createTag } from '../../../utils/utils.js';
 import { addAssetMetadata } from '../visual-metadata.js';
 
@@ -146,7 +146,6 @@ function getAssetData(asset) {
   };
 }
 
-// Determine if an asset is above-the-fold and should be considered critical
 function isAboveFold(asset) {
   const main = asset.closest('main');
 
@@ -159,6 +158,7 @@ function isAboveFold(asset) {
     || secondSection?.contains(asset)
     || !!asset.closest('.hero, .marquee, .hero-marquee');
 }
+
 export function isViewportTooSmall() {
   return !window.matchMedia('(min-width: 1200px)').matches;
 }
@@ -166,9 +166,9 @@ export function isViewportTooSmall() {
 export async function checkImageDimensions(url, area, injectVisualMetadata = false) {
   if (isViewportTooSmall()) {
     return {
-      checkId: CHECKS.IMAGE_DIMENSIONS.id,
-      severity: CHECKS.IMAGE_DIMENSIONS.severity,
-      title: CHECKS.IMAGE_DIMENSIONS.title,
+      checkId: ASSETS_IDS.imageDimensions,
+      severity: ASSETS_SEVERITIES.imageDimensions,
+      title: ASSETS_TITLES.AssetDimensions,
       status: STATUS.EMPTY,
       description: 'Viewport is too small to run asset checks (minimum width: 1200px).',
     };
@@ -188,9 +188,9 @@ export async function checkImageDimensions(url, area, injectVisualMetadata = fal
 
   if (!allAssets.length) {
     return {
-      checkId: CHECKS.IMAGE_DIMENSIONS.id,
-      severity: CHECKS.IMAGE_DIMENSIONS.severity,
-      title: CHECKS.IMAGE_DIMENSIONS.title,
+      checkId: ASSETS_IDS.imageDimensions,
+      severity: ASSETS_SEVERITIES.imageDimensions,
+      title: ASSETS_TITLES.AssetDimensions,
       status: STATUS.EMPTY,
       description: 'No assets found in the main content.',
     };
@@ -200,19 +200,13 @@ export async function checkImageDimensions(url, area, injectVisualMetadata = fal
 
   if (!assets.length) {
     return {
-      checkId: CHECKS.IMAGE_DIMENSIONS.id,
-      severity: CHECKS.IMAGE_DIMENSIONS.severity,
-      title: CHECKS.IMAGE_DIMENSIONS.title,
+      checkId: ASSETS_IDS.imageDimensions,
+      severity: ASSETS_SEVERITIES.imageDimensions,
+      title: ASSETS_TITLES.AssetDimensions,
       status: STATUS.EMPTY,
       description: 'No eligible assets found (visible, non-icon, non-SVG).',
     };
   }
-
-  // Initialize arrays for both ASO and notification support
-  const assetsWithMismatch = [];
-  const assetsWithMatch = [];
-  const criticalAssetFailures = [];
-  const warningAssetFailures = [];
 
   if (injectVisualMetadata) area.body.classList.add('preflight-assets-analysis');
 
@@ -221,19 +215,10 @@ export async function checkImageDimensions(url, area, injectVisualMetadata = fal
     const isAssetAboveFold = isAboveFold(asset);
     assetData.isAboveFold = isAssetAboveFold;
 
-    // Add failure classification and populate arrays for both approaches
     if (assetData.hasMismatch) {
       assetData.failure = isAssetAboveFold ? 'critical' : 'warning';
-      assetsWithMismatch.push(assetData);
-
-      if (isAssetAboveFold) {
-        criticalAssetFailures.push(assetData);
-      } else {
-        warningAssetFailures.push(assetData);
-      }
     } else {
       assetData.failure = null;
-      assetsWithMatch.push(assetData);
     }
 
     if (injectVisualMetadata) addAssetMetadata(asset, assetData);
@@ -243,7 +228,6 @@ export async function checkImageDimensions(url, area, injectVisualMetadata = fal
 
   if (injectVisualMetadata) area.body.classList.remove('preflight-assets-analysis');
 
-  // Status determination that supports both notification popup and ASO approaches
   const getStatus = () => {
     const criticalCount = processedAssets.filter(
       (check) => check.failure === 'critical',
@@ -252,11 +236,11 @@ export async function checkImageDimensions(url, area, injectVisualMetadata = fal
       (check) => check.failure === 'warning',
     ).length;
 
-    if (criticalCount === 0 && warningCount === 0) {
+    if (criticalCount === 0 && warningCount > 0) {
       return {
-        checkId: CHECKS.IMAGE_DIMENSIONS.id,
-        severity: CHECKS.IMAGE_DIMENSIONS.severity,
-        description: 'All assets have matching dimensions.',
+        checkId: ASSETS_IDS.imageDimensions,
+        severity: SEVERITY.WARNING,
+        description: `${warningCount} below-the-fold asset(s) have dimension mismatches.`,
         status: STATUS.PASS,
       };
     }
@@ -265,18 +249,17 @@ export async function checkImageDimensions(url, area, injectVisualMetadata = fal
       const criticalMsg = `${criticalCount} above-the-fold asset(s) have dimension mismatches (critical).`;
       const warningMsg = warningCount > 0 ? ` ${warningCount} below-the-fold asset(s) also have issues.` : '';
       return {
-        checkId: CHECKS.IMAGE_DIMENSIONS.id,
+        checkId: ASSETS_IDS.imageDimensions,
         severity: SEVERITY.CRITICAL,
         description: criticalMsg + warningMsg,
         status: STATUS.FAIL,
       };
     }
-
     return {
-      checkId: CHECKS.IMAGE_DIMENSIONS.id,
-      severity: SEVERITY.WARNING,
-      description: `${warningCount} below-the-fold asset(s) have dimension mismatches.`,
-      status: STATUS.LIMBO,
+      checkId: ASSETS_IDS.imageDimensions,
+      severity: ASSETS_SEVERITIES.imageDimensions,
+      description: 'All assets have matching dimensions.',
+      status: STATUS.PASS,
     };
   };
 
@@ -284,13 +267,13 @@ export async function checkImageDimensions(url, area, injectVisualMetadata = fal
 
   const result = {
     ...status,
-    title: CHECKS.IMAGE_DIMENSIONS.title,
+    title: ASSETS_TITLES.AssetDimensions,
     details: {
       assets: processedAssets,
-      assetsWithMismatch,
-      assetsWithMatch,
-      criticalAssetFailures,
-      warningAssetFailures,
+      assetsWithMismatch: processedAssets.filter((data) => data.hasMismatch),
+      assetsWithMatch: processedAssets.filter((data) => !data.hasMismatch),
+      criticalAssetFailures: processedAssets.filter((data) => data.failure === 'critical'),
+      warningAssetFailures: processedAssets.filter((data) => data.failure === 'warning'),
     },
   };
 
