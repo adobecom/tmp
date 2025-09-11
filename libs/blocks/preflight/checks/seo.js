@@ -1,6 +1,4 @@
-import {
-  STATUS, CHECKS, SEO_TITLES, SEO_IDS, SEO_DESCRIPTIONS,
-} from './constants.js';
+import { STATUS, CHECKS, SEO_TITLES, SEO_IDS, SEO_DESCRIPTIONS } from './constants.js';
 import getServiceConfig from '../../../utils/service-config.js';
 import { getConfig, updateConfig } from '../../../utils/utils.js';
 
@@ -347,9 +345,7 @@ export async function checkLinks({ area, urlHash, envName }) {
   }
 
   const hasFailures = status === STATUS.FAIL;
-  window.dispatchEvent(new CustomEvent('preflightLinksComplete', {
-    detail: { hasFailures }
-  }));
+  window.dispatchEvent(new CustomEvent('preflightLinksComplete', { detail: { hasFailures } }));
 
   return result;
 }
