@@ -201,8 +201,8 @@ header.global-navigation {
   align-items: stretch;
   flex-direction: column;
   font-size: 14px;
-  font-weight: 400;
-  line-height: 1.4;
+  font-weight: 600;
+  line-height: 0.96;
   color: var(--feds-color-link);
   white-space: nowrap;
 }
@@ -565,7 +565,7 @@ header.new-nav.global-navigation:not(:has(.feds-dropdown--active)) .feds-profile
   }
 
   .feds-topnav-wrapper {
-    border-bottom: 1px solid var(--feds-borderColor);
+    // border-bottom: 1px solid var(--feds-borderColor);
     box-sizing: content-box;
   }
 
