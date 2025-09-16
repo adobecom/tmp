@@ -585,9 +585,9 @@ body.mweb-enabled .hero-marquee .con-block.row-text:has(.action-area) + .con-blo
 
 .hero-marquee.frameio .foreground {
   padding-top: var(--spacing-xl);
-  will-change: opacity;
-  opacity: calc(1 - (clamp(30, var(--progress), 70) - 30) / 40);
-  transform: translateY(calc(20vh * (clamp(10, var(--progress), 70) - 10) / 60));
+  will-change: opacity, transform;
+  opacity: calc(1 - (clamp(10, var(--exit-progress), 25) - 10) / 15);
+  transform: translateY(calc(150px * (clamp(0, var(--exit-progress), 25)) / 25));
   grid-template-columns: minmax(100%, 1fr) minmax(0, 1fr)
 }
 
@@ -608,6 +608,9 @@ body.mweb-enabled .hero-marquee .con-block.row-text:has(.action-area) + .con-blo
   min-width: var(--grid-container-width);
   max-width: var(--grid-container-width);
   margin: 0 auto;
+  --scale-percent: calc(calc(130 - max(0, calc((var(--enter-progress) - 40) / 5 * 3))) / 100);
+  transform-origin: center top;
+  transform: scale(clamp(1, var(--scale-percent), 1.3));
 }
 
 .hero-marquee.frameio {
@@ -618,15 +621,47 @@ body.mweb-enabled .hero-marquee .con-block.row-text:has(.action-area) + .con-blo
 .hero-marquee.frameio-ambiance-video .foreground {
   position: relative;
   z-index: 2;
+  margin: auto;
+  justify-content: center;
+  justify-items: center;
+  grid-template-columns: initial;
 }
 
-.hero-marquee.frameio-ambiance-video .foreground-media {
+.hero-marquee.frameio-ambiance-video.exiting-height .foreground-media {
+  --video-height: calc(600px - 5px * var(--exit-progress));
   top: 0;
   transform: none;
   height: 100%;
+  max-height: var(--video-height);
+  position: relative;
 
   video {
     object-fit: none;
-    transform: scale(1.3);
+    max-height: var(--video-height);
   }
+}
+
+.hero-marquee.frameio-ambiance-video.entering-height {
+  transform: translateY(calc(200px * (clamp(0, var(--enter-progress), 100)) / 100)); 
+}
+
+.hero-marquee.frameio-ambiance-video.entering-height .foreground-media {
+  --video-height: calc(400px + 3px * var(--enter-progress));
+  top: 0;
+  transform: none;
+  max-height: var(--video-height);
+  position: relative;
+
+  video {
+    object-fit: none;
+    height: var(--video-height);
+  }
+}
+
+.hero-marquee.frameio-ambiance-video.exiting-height .foreground-media video {
+  object-position: left top;
+}
+
+.hero-marquee.frameio-ambiance-video.entering-height .foreground-media video {
+  object-position: left bottom;
 }
