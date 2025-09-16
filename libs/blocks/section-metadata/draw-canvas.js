@@ -7,33 +7,38 @@ export function paint(el) {
   const STAR_SIZE = 3;
   const STAR_MIN_SCALE = 0.2;
   const OVERFLOW_THRESHOLD = 50;
-  const section = el.parentElement;
-  const STAR_COUNT = (section.offsetWidth + section.offsetHeight) / 8;
+  const STAR_COUNT = (el.offsetWidth + el.offsetHeight) / 12;
 
-  const canvas = document.querySelector('canvas'),
+  const canvas = document.querySelector('canvas.silky-background'),
     context = canvas.getContext('2d');
 
+  const stars = [];
   let scale = 1, // device pixel ratio
     width,
     height;
-
-  let stars = [];
-
   let pointerX, pointerY;
-
   let velocity = { x: 0, y: 0, tx: 0, ty: 0, z: 0.0005 };
-
   let touchInput = false;
+
+  let lastScrollY = window.scrollY;
+  let accumulatedScrollDY = 0;
+  let accumulatedWheelDY = 0;
 
   generate();
   resize();
   step();
 
-  window.onresize = resize;
-  canvas.onmousemove = onMouseMove;
-  canvas.ontouchmove = onTouchMove;
-  canvas.ontouchend = onMouseLeave;
-  document.onmouseleave = onMouseLeave;
+  window.addEventListener('resize', resize, { passive: true });
+  el.addEventListener('mousemove', onMouseMove, { passive: true });
+  el.addEventListener('touchmove', onTouchMove, { passive: false });
+  el.addEventListener('touchend', onMouseLeave, { passive: true });
+  document.addEventListener('mouseleave', onMouseLeave, { passive: true });
+
+  // Wheel gives immediate intent—even if page doesn't scroll much (overscroll/elastic).
+  // We don't preventDefault, so passive: true is fine.
+  window.addEventListener('wheel', onWheel, { passive: true });
+  // Scroll captures touch/keyboard/page momentum. Works on any scroll container—adjust if needed.
+  window.addEventListener('scroll', onScroll, { passive: true });
 
   function generate() {
     for (let i = 0; i < STAR_COUNT; i++) {
@@ -96,8 +101,8 @@ export function paint(el) {
   function resize() {
     scale = window.devicePixelRatio || 1;
 
-    width = section.offsetWidth * scale;
-    height = section.offsetHeight * scale;
+    width = el.offsetWidth * scale;
+    height = el.offsetHeight * scale;
 
     canvas.width = width;
     canvas.height = height;
@@ -115,6 +120,16 @@ export function paint(el) {
   }
 
   function update() {
+    const scrollFactor = 2;
+    if (accumulatedWheelDY !== 0) {
+      velocity.ty += (accumulatedWheelDY * 0.02) * scale * scrollFactor;
+      accumulatedWheelDY = 0; // consume per frame
+    }
+    if (accumulatedScrollDY !== 0) {
+      velocity.ty += (accumulatedScrollDY * 0.015) * scale * scrollFactor;
+      accumulatedScrollDY = 0; // consume per frame
+    }
+
     velocity.tx *= 0.96;
     velocity.ty *= 0.96;
 
@@ -194,5 +209,17 @@ export function paint(el) {
   function onMouseLeave() {
     pointerX = null;
     pointerY = null;
+  }
+
+  function onWheel(e) {
+    // e.deltaY > 0 when scrolling down (usually)
+    accumulatedWheelDY += e.deltaY;
+  }
+
+  function onScroll() {
+    const y = window.scrollY;
+    const dy = y - lastScrollY;
+    lastScrollY = y;
+    accumulatedScrollDY += dy;
   }
 }

@@ -373,3 +373,8 @@ main > .section[class*='-up'] > .content {
   height: 100%;
   aspect-ratio: 5 / 4;
 }
+
+.section.exit-parallax {
+  transform: translateY(calc(100px * (clamp(0, var(--exit-progress), 70)) / 70));
+  margin-bottom: 100px;
+}

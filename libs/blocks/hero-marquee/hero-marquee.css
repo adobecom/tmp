@@ -585,10 +585,13 @@ body.mweb-enabled .hero-marquee .con-block.row-text:has(.action-area) + .con-blo
 
 .hero-marquee.frameio .foreground {
   padding-top: var(--spacing-xl);
+  grid-template-columns: minmax(100%, 1fr) minmax(0, 1fr)
+}
+
+.hero-marquee.frameio.text-parallax .foreground {
   will-change: opacity, transform;
   opacity: calc(1 - (clamp(10, var(--exit-progress), 25) - 10) / 15);
   transform: translateY(calc(150px * (clamp(0, var(--exit-progress), 25)) / 25));
-  grid-template-columns: minmax(100%, 1fr) minmax(0, 1fr)
 }
 
 .hero-marquee.frameio .foreground-media {
@@ -628,58 +631,48 @@ body.mweb-enabled .hero-marquee .con-block.row-text:has(.action-area) + .con-blo
 }
 
 .hero-marquee.frameio-ambiance-video {
+  --video-height: 600px;
+}
+
+.hero-marquee.frameio-ambiance-video {
   padding: 0;
   background: transparent;
+  will-change: transform;
+  min-height: var(--video-height);
+  --parallax-y: calc(100px * (clamp(0, var(--exit-progress), 60)) / 60);
+  --translate-parallax-y: translateY(var(--parallax-y));
+  --translate-parallax-y-rev: translateY(calc(-var(--parallax-y)));
 }
 
 .hero-marquee.frameio-ambiance-video .foreground {
   position: relative;
   z-index: 2;
   margin: auto;
-  justify-content: center;
-  justify-items: center;
-  grid-template-columns: initial;
 }
 
 .hero-marquee.frameio-ambiance-video .foreground-media {
   mix-blend-mode: screen;
-}
-
-.hero-marquee.frameio-ambiance-video.exiting-height .foreground-media {
-  --video-height: calc(600px - 5px * var(--exit-progress));
+  min-height: var(--video-height);
+  height: var(--video-height);
   top: 0;
-  transform: none;
-  height: 100%;
-  max-height: var(--video-height);
-  position: relative;
-
-  video {
-    object-fit: none;
-    max-height: var(--video-height);
-  }
 }
 
-.hero-marquee.frameio-ambiance-video.entering-height {
-  transform: translateY(calc(200px * (clamp(0, var(--enter-progress), 100)) / 100));
-}
-
-.hero-marquee.frameio-ambiance-video.entering-height .foreground-media {
-  --video-height: calc(400px + 3px * var(--enter-progress));
-  top: 0;
-  transform: none;
-  max-height: var(--video-height);
-  position: relative;
-
-  video {
-    object-fit: none;
-    height: var(--video-height);
-  }
-}
-
-.hero-marquee.frameio-ambiance-video.exiting-height .foreground-media video {
-  object-position: left top;
-}
-
-.hero-marquee.frameio-ambiance-video.entering-height .foreground-media video {
+.hero-marquee.frameio-ambiance-video.enter-parallax .foreground-media video {
   object-position: left bottom;
+}
+
+.hero-marquee.frameio-ambiance-video.exit-parallax {
+  transform: var(--translate-parallax-y);
+}
+
+.hero-marquee.frameio-ambiance-video.exit-parallax .foreground-media {
+  transform: var(--translate-parallax-y-rev);
+}
+
+.hero-marquee.frameio-ambiance-video.enter-parallax {
+  transform: var(--translate-parallax-y);
+}
+
+.hero-marquee.frameio-ambiance-video.enter-parallax .foreground-media {
+  transform: var(--translate-parallax-y-rev);
 }

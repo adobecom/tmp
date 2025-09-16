@@ -78,6 +78,16 @@ async function handleFrameio(frameio, section) {
   await addCanvas(section);
 }
 
+
+/* FrameIO addition */
+async function handleParallax(parallax, section) {
+  if (['exit', 'enter'].includes(parallax)) {
+    section.classList.add('exit-parallax');
+    const { addProgress } = await import('../../utils/frameio.js')
+    addProgress(section);
+  }
+}
+
 export const getMetadata = (el) => [...el.childNodes].reduce((rdx, row) => {
   if (row.children) {
     const key = row.children[0].textContent.trim().toLowerCase();
@@ -113,5 +123,6 @@ export default async function init(el) {
   if (metadata.delay) handleDelay(metadata.delay.text, section);
   if (metadata.anchor) handleAnchor(metadata.anchor.text, section);
   if (metadata.frameio) handleFrameio(metadata.frameio.text, section);
+  if (metadata.parallax) await handleParallax(metadata.parallax.text, section);
   addListAttrToSection(section);
 }

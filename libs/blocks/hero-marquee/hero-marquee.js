@@ -242,76 +242,6 @@ function handleViewportOrder(content) {
 }
 
 
-/* FrameIO addition */
-const clamp = (n, a, b) => Math.max(a, Math.min(b, n));
-function throttle(cb, delay, { trailing = false } = {}) {
-  let timer = null;
-  let lastArgs = null;
-  function tryToEnd() {
-    if (lastArgs && trailing) {
-      cb.apply(this, lastArgs);
-      lastArgs = null;
-      timer = setTimeout(tryToEnd.bind(this), delay);
-    } else {
-      timer = null;
-    }
-  }
-  return function throttled(...args) {
-    if (timer) {
-      lastArgs = args;
-      return;
-    }
-    cb.apply(this, args);
-    timer = setTimeout(tryToEnd.bind(this), delay);
-  };
-}
-const NAV_HEIGHT = 80;
-
-/* FrameIO addition */
-function addIO(el) {
-  let screenHeight = window.innerHeight;
-  window.addEventListener('resize', throttle(() => {
-    screenHeight = window.innerHeight;
-  }, 10));
-  const elHeight = el.offsetHeight;
-  
-  let ticking = false;
-  
-  function updateParallax() {
-    const rect = el.getBoundingClientRect();
-    // how much of the el already entered from bottom
-    const enterProgress = clamp((screenHeight - rect.top) / elHeight, 0, 1);
-    // how much of the el already exited from top (gnav)
-    const exitProgress = clamp((-rect.top + NAV_HEIGHT) / elHeight, 0, 1);
-    el.style.setProperty('--enter-progress', enterProgress * 100);
-    el.style.setProperty('--exit-progress', exitProgress * 100);
-    ticking = false;
-  }
-  
-  window.addEventListener('scroll', () => {
-    if (!ticking) {
-      requestAnimationFrame(updateParallax);
-      ticking = true;
-    }
-  }, { passive: true });
-
-  const videoContainer = el.querySelector('.video-container');
-    if (videoContainer) {
-      const button = videoContainer.querySelector('.pause-play-wrapper');
-      if (button.querySelector('.is-playing')) {
-        // pause first
-        button.click();
-      }
-      new IntersectionObserver(async (entries, ob) => {
-        if (entries[0].isIntersecting && !button.querySelector('.is-playing')) {
-          button.click();
-        } else if (button.querySelector('.is-playing')) {
-          button.click();
-        }
-    }, { threshold: 0.5 }).observe(videoContainer);
-    }
-}
-
 export default async function init(el) {
   el.classList.add('con-block');
   let rows = el.querySelectorAll(':scope > div');
@@ -423,11 +353,7 @@ export default async function init(el) {
 
   /* FrameIO addition */
   if (el.matches('.frameio') || el.matches('.frameio-ambiance-video')) {
-    new IntersectionObserver(async (entries, ob) => {
-      if (entries[0].isIntersecting) {
-        ob.disconnect();
-        addIO(el);
-      }
-    }).observe(el);
+    const { addProgress } = await import('../../utils/frameio.js')
+    addProgress(el);
   }
 }
