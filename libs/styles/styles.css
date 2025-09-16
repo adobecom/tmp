@@ -199,8 +199,9 @@
 
   /* FrameIO addition */
   main > .section:not(:first-child) > div,
-  main > .section:first-child > div:not(:first-child) {
+  main > .section:first-child > div:not(:first-child, .hero-marquee) {
     --grid-container-width: 1080px;
+    --grid-margins-width: calc((100% - var(--grid-container-width)) / 2);
   }
 }
 

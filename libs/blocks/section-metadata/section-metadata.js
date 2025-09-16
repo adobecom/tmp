@@ -70,7 +70,7 @@ async function handleFrameio(frameio, section) {
     const canvasWrapper = createTag('div', { class: 'canvas-wrapper' });
     const canvas = createTag('canvas', { class: 'silky-background' });
     canvasWrapper.append(canvas);
-    el.append(canvasWrapper);
+    el.prepend(canvasWrapper);
     const { paint } = await import('./draw-canvas.js');
     paint(el);
   }

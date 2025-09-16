@@ -193,7 +193,8 @@
   bottom: 5px;
 }
 
-.section[class*='grid-width-'] {
+.section[class*='grid-width-'],
+.text-block[class*='grid-width-'] /** FrameIO addition */ {
   padding-left: var(--grid-margins-width);
   padding-right: var(--grid-margins-width);
   display: grid;
@@ -201,6 +202,7 @@
 }
 
 .section[class*='grid-width-'] > .content,
+.text-block[class*='grid-width-'] > .content /** FrameIO addition */,
 main > .section[class*='-up'] > .content {
   max-width: initial;
   margin: 0;
@@ -236,7 +238,8 @@ main > .section[class*='-up'] > .content {
     order: 1;
   }
 
-  .section[class*='grid-width-'] {
+  .section[class*='grid-width-'],
+  .text-block[class*='grid-width-'] /** FrameIO addition */ {
     display: block;
   }
 }
@@ -260,14 +263,16 @@ main > .section[class*='-up'] > .content {
 }
 
 @media screen and (min-width: 720px) {
-  .section.grid-width-6 {
+  .section.grid-width-6,
+  .text-block[class*='grid-width-6'] /** FrameIO addition */ {
     padding-left: calc((100vw - 600px) / 2);
     padding-right: calc((100vw - 600px) / 2);
   }
 }
 
 @media screen and (min-width: 920px) {
-  .section.grid-width-8 {
+  .section.grid-width-8,
+  .text-block[class*='grid-width-8'] /** FrameIO addition */ {
     padding-left: calc((100vw - 800px) / 2);
     padding-right: calc((100vw - 800px) / 2);
   }
@@ -280,7 +285,8 @@ main > .section[class*='-up'] > .content {
 }
 
 @media screen and (min-width: 1120px) {
-  .section.grid-width-10 {
+  .section.grid-width-10,
+  .text-block[class*='grid-width-10'] /** FrameIO addition */ {
     padding-left: calc((100vw - 1000px) / 2);
     padding-right: calc((100vw - 1000px) / 2);
   }
@@ -319,17 +325,20 @@ main > .section[class*='-up'] > .content {
     grid-template-columns: 3fr 1fr;
   }
 
-  .section.grid-width-6-desktop {
+  .section.grid-width-6-desktop,
+  .text-block[class*='grid-width-6-desktop'] /** FrameIO addition */ {
     padding-left: var(--grid-margins-width-6);
     padding-right: var(--grid-margins-width-6);
   }
 
-  .section.grid-width-8-desktop {
+  .section.grid-width-8-desktop,
+  .text-block[class*='grid-width-8-desktop'] /** FrameIO addition */ {
     padding-left: var(--grid-margins-width-8);
     padding-right: var(--grid-margins-width-8);
   }
 
-  .section.grid-width-10-desktop {
+  .section.grid-width-10-desktop,
+  .text-block[class*='grid-width-10-desktop'] /** FrameIO addition */ {
     padding-left: var(--grid-margins-width-10);
     padding-right: var(--grid-margins-width-10);
   }
