@@ -1359,3 +1359,11 @@
   display: block;
   padding: var(--spacing-xxxs) 0;
 }
+
+.aside.no-text-max-width.center:not(.notification) .foreground.container .text {
+  max-width: unset;
+}
+
+.aside.no-text-max-width [class^="detail-"] {
+  color: var(--color-frameio-accent);
+}

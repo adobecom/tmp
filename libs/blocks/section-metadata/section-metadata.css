@@ -376,5 +376,5 @@ main > .section[class*='-up'] > .content {
 
 .section.exit-parallax {
   transform: translateY(calc(100px * (clamp(0, var(--exit-progress), 70)) / 70));
-  margin-bottom: 100px;
+  padding-bottom: 150px;
 }

@@ -221,6 +221,7 @@ function moveSlides(event, carouselElements, jumpToIndex) {
     direction,
     ariaLive,
     jumpTo,
+    textTogglesContainer, // FrameIO addition
   } = carouselElements;
 
   ariaLive.textContent = '';
@@ -306,6 +307,14 @@ function moveSlides(event, carouselElements, jumpToIndex) {
     referenceSlide.style.order = i;
   }
 
+  // FrameIO addition
+  if (textTogglesContainer) {
+    textTogglesContainer.querySelectorAll(':scope > div').forEach((div, idx) => {
+      const toIndex = jumpToIndex || parseInt(activeSlide.dataset.index, 10);
+      div.classList.toggle('active', idx === toIndex);
+    });
+  }
+
   /*
    * Activates slide animation.
    * Delay time matches animation time for next/previous controls.
@@ -368,7 +377,7 @@ function mobileSwipeDetect(carouselElements) {
 }
 
 function handleChangingSlides(carouselElements) {
-  const { el, nextPreviousBtns, slideIndicators, jumpTo } = carouselElements;
+  const { el, nextPreviousBtns, slideIndicators, jumpTo, textTogglesContainer } = carouselElements;
 
   // Handle Next/Previous Buttons
   [...nextPreviousBtns].forEach((btn) => {
@@ -388,6 +397,14 @@ function handleChangingSlides(carouselElements) {
     [...slideIndicators].forEach((li) => {
       li.addEventListener('click', (event) => {
         const jumpToIndex = Number(li.dataset.index);
+        moveSlides(event, carouselElements, jumpToIndex);
+      });
+    });
+
+    // FrameIO addition
+    textTogglesContainer?.querySelectorAll(':scope > div').forEach((div) => {
+      div.addEventListener('click', (event) => {
+        const jumpToIndex = Number(div.dataset.index);
         moveSlides(event, carouselElements, jumpToIndex);
       });
     });
@@ -426,16 +443,25 @@ export default function init(el) {
   const carouselSection = el.closest('.section');
   if (!carouselSection) return;
 
+  const isFrameIO = el.matches('.frameio'); // FrameIO addition
   const keyDivs = el.querySelectorAll(':scope > div > div:first-child');
   const carouselName = keyDivs[0].textContent;
   const parentArea = el.closest('.fragment') || document;
   const candidateKeys = parentArea.querySelectorAll('div.section-metadata > div > div:first-child');
+  const textToggles = []; // FrameIO addition
   const slides = [...candidateKeys].reduce((rdx, key) => {
     if (key.textContent === 'carousel' && key.nextElementSibling.textContent === carouselName) {
       const slide = key.closest('.section');
       slide.classList.add('carousel-slide');
       rdx.push(slide);
       slide.setAttribute('data-index', rdx.indexOf(slide));
+      // FrameIO addition
+      if (isFrameIO) {
+        const textToggle = slide.querySelector('.text');
+        textToggle.setAttribute('data-index', rdx.indexOf(slide));
+        textToggle.setAttribute('aria-role', 'button');
+        textToggles.push(textToggle);
+      }
     }
     return rdx;
   }, []);
@@ -446,6 +472,11 @@ export default function init(el) {
   const nextPreviousContainer = createTag('div', { class: 'carousel-button-container' });
   const slideIndicators = decorateSlideIndicators(slides, jumpTo);
   const controlsContainer = createTag('div', { class: 'carousel-controls is-delayed' });
+  // FrameIO addition
+  textToggles[0].classList.add('active');
+  const textTogglesContainer = isFrameIO
+    ? createTag('div', { class: 'carousel-textToggles' }, [...textToggles])
+    : null;
 
   convertMpcMp4(slides);
   fragment.append(...slides);
@@ -466,6 +497,7 @@ export default function init(el) {
     direction: undefined,
     jumpTo,
     ariaLive,
+    textTogglesContainer, // FrameIO addition
   };
 
   if (el.classList.contains('lightbox')) {
@@ -475,6 +507,10 @@ export default function init(el) {
   } else {
     slideWrapper.append(slideContainer);
   }
+
+  // FrameIO addition
+  if (isFrameIO) slideWrapper.append(textTogglesContainer);
+
   /*
    * Hinting center variant - Set slides order
    * before moveSlides is called for centering to work.

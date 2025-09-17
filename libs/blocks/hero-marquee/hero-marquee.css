@@ -2,6 +2,7 @@
   --s-min-height: 248px; /* 360px */
   --m-min-height: 448px; /* 560px */
   --l-min-height: 588px; /* 700px */
+  --xl-min-height: 728px; /* 840px */ /* FrameIO addition */
 
   /* 112 = 56px default padding */
 
@@ -20,6 +21,7 @@
 .hero-marquee.no-min-height { min-height: unset; }
 .hero-marquee.s-min-height { min-height: var(--s-min-height); }
 .hero-marquee.l-min-height { min-height: var(--l-min-height); }
+.hero-marquee.xl-min-height { min-height: var(--xl-min-height); } /* FrameIO addition */
 
 .dark .hero-marquee,
 .hero-marquee.dark {
@@ -631,17 +633,17 @@ body.mweb-enabled .hero-marquee .con-block.row-text:has(.action-area) + .con-blo
 }
 
 .hero-marquee.frameio-ambiance-video {
-  --video-height: 600px;
-}
+  --video-height: var(--xl-min-height);
+  --parallax-y: calc(100px * (clamp(0, var(--exit-progress), 60)) / 60);
+  --translate-parallax-y: translateY(var(--parallax-y));
+  --translate-parallax-y-rev: translateY(calc(-var(--parallax-y)));
 
-.hero-marquee.frameio-ambiance-video {
   padding: 0;
   background: transparent;
   will-change: transform;
   min-height: var(--video-height);
-  --parallax-y: calc(100px * (clamp(0, var(--exit-progress), 60)) / 60);
-  --translate-parallax-y: translateY(var(--parallax-y));
-  --translate-parallax-y-rev: translateY(calc(-var(--parallax-y)));
+  mix-blend-mode: screen;
+
 }
 
 .hero-marquee.frameio-ambiance-video .foreground {
@@ -651,7 +653,6 @@ body.mweb-enabled .hero-marquee .con-block.row-text:has(.action-area) + .con-blo
 }
 
 .hero-marquee.frameio-ambiance-video .foreground-media {
-  mix-blend-mode: screen;
   min-height: var(--video-height);
   height: var(--video-height);
   top: 0;
@@ -675,4 +676,13 @@ body.mweb-enabled .hero-marquee .con-block.row-text:has(.action-area) + .con-blo
 
 .hero-marquee.frameio-ambiance-video.enter-parallax .foreground-media {
   transform: var(--translate-parallax-y-rev);
+}
+
+.hero-marquee.frameio-bookend.con-block {
+  mix-blend-mode: screen;
+}
+
+.hero-marquee.frameio-bookend.con-block .background video {
+  top: 75%;
+  height: unset;
 }

@@ -773,3 +773,19 @@ html[dir="rtl"] .carousel .move-indicators {
   max-width: 96vw;
   background: transparent;
 }
+
+.carousel.frameio .carousel-textToggles {
+  display: flex;
+  gap: var(--spacing-m);
+
+  & > div {
+    cursor: pointer;
+    opacity: 0.5;
+    transition: opacity 500ms ease-out;
+
+    &:hover,
+    &.active {
+      opacity: 1;
+    }
+  }
+}
