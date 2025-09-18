@@ -49,7 +49,9 @@
 
 /* Menu */
 .feds-footer-wrapper .feds-menu-headline {
-  font-size: 14px;
+  font-size: 12px; /* FrameIO update from 14px */
+  text-transform: uppercase; /* FrameIO update from none*/
+  color: rgba(233,233,255,0.7); /* FrameIO update from inherited value */
   line-height: 1.4;
 }
 
@@ -62,6 +64,7 @@
 .feds-footer-wrapper .feds-menu-content .feds-navLink {
   padding-top: 0;
   padding-bottom: 0;
+  font-size: 16px; /* FrameIO update from inherited value */
 }
 
 /* Options (region selector, social, privacy) */
@@ -293,6 +296,7 @@ span.feds-footer-privacyLink-divider {
 @media (min-width: 900px) {
   .global-footer:not(.mobile) .feds-footer-wrapper {
     row-gap: 30px;
+    padding-top: 90px; /* FrameIO addition */
   }
 
   /* If there is too much content, float it on multiple rows */
@@ -387,4 +391,9 @@ span.feds-footer-privacyLink-divider {
   .feds-footer-wrapper {
     max-width: 1504px;
   }
+}
+
+/* FrameIO addition */
+.global-footer .feds-menu-items .feds-navLink picture {
+  min-width: 30px;
 }

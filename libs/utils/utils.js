@@ -1541,8 +1541,29 @@ async function loadPostLCP(config) {
     header.classList.remove('gnav-hide');
   }
   loadTemplate();
-  const { default: loadFonts } = await import('./fonts.js');
-  loadFonts(config.locale, loadStyle);
+  /**
+   * FrameIO update: add quick support for custom font families based outside of Adobe Fonts
+   */
+  const fontFamily = getMetadata('font-family');
+  if (fontFamily?.toLowerCase() === 'frame') {
+    const fontStyle = document.createElement('style');
+    fontStyle.textContent = `
+      @font-face {
+          font-family: FrameGothic;
+          src: url(/libs/fonts/047e9a130b09a20c-s.p.woff2) format("woff2");
+          font-display: block;
+          font-weight: 400 600;
+          font-style: normal;
+      }
+      :root {
+        --body-font-family: FrameGothic, Arial;
+      }
+    `;
+    document.head.appendChild(fontStyle);
+  } else {
+    const { default: loadFonts } = await import('./fonts.js');
+    loadFonts(config.locale, loadStyle);
+  }
 
   if (config?.mep) {
     import('../features/personalization/personalization.js')

@@ -213,7 +213,7 @@ content auhtored manually and AEM-imported content */
 
   .global-footer:not(.mobile) .feds-menu-headline {
     position: static;
-    margin: 0 32px;
+    margin: 0; /* FrameIO update from 0 32px */
     cursor: default;
   }
 
@@ -315,5 +315,19 @@ content auhtored manually and AEM-imported content */
 
   .feds-crossCloudMenu .feds-navLink {
     padding: 0 28px;
+  }
+}
+
+/* FrameIO addition */
+@media (hover: hover) {
+  .global-footer .feds-navLink:hover {
+    color: #fff;
+  }
+
+  .global-footer:hover .feds-navLink {
+    color: rgba(234,234,255,0.5);
+  }
+  .global-footer .feds-navLink:hover {
+    color: #fff;
   }
 }
