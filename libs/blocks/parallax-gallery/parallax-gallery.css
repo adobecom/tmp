@@ -1,0 +1,42 @@
+.parallax-gallery {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.parallax-gallery .col {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  will-change: transform;
+}
+
+.parallax-gallery .col:not(:last-child) img {
+  width: 354px;
+  height: 354px;
+  border-radius: 24px;
+}
+
+.parallax-gallery .col:nth-child(1) {
+  transform: translateY(calc(80px - 20px * (clamp(0, var(--enter-progress), 100)) / 100 - 30px * (clamp(0, var(--exit-progress), 100)) / 100));
+}
+
+.parallax-gallery .col:nth-child(2) {
+  transform: translateY(calc(30px - 80px * (clamp(0, var(--enter-progress), 100)) / 100 - 80px * (clamp(0, var(--exit-progress), 100)) / 100));
+}
+
+.parallax-gallery .col:nth-child(3) {
+  transform: translateY(calc(10px - 100px * (clamp(0, var(--enter-progress), 100)) / 100 - 100px * (clamp(0, var(--exit-progress), 100)) / 100 ));
+}
+
+.parallax-gallery .col:nth-child(4) {
+  transform: translateY(calc(40px - 30px * (clamp(0, var(--exit-progress), 100)) / 100 ));
+}
+
+.parallax-gallery .col:last-child {
+  position: absolute;
+  left: 50%;
+  width: 333px;
+  height: 692px;
+  transform: translate(-50%, calc(200px - 240px * (clamp(0, var(--enter-progress), 100)) / 100 - 240px * (clamp(0, var(--exit-progress), 100)) / 100));
+}
