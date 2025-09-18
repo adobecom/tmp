@@ -30,7 +30,7 @@ export function paint(el) {
 
   window.addEventListener('resize', resize, { passive: true });
   el.addEventListener('mousemove', onMouseMove, { passive: true });
-  el.addEventListener('touchmove', onTouchMove, { passive: false });
+  el.addEventListener('touchmove', onTouchMove, { passive: true });
   el.addEventListener('touchend', onMouseLeave, { passive: true });
   document.addEventListener('mouseleave', onMouseLeave, { passive: true });
 
@@ -99,7 +99,8 @@ export function paint(el) {
   }
 
   function resize() {
-    scale = window.devicePixelRatio || 1;
+    // TODO: see if it's crisp enough
+    // scale = window.devicePixelRatio || 1;
 
     width = el.offsetWidth * scale;
     height = el.offsetHeight * scale;
@@ -202,8 +203,6 @@ export function paint(el) {
     touchInput = true;
 
     movePointer(event.touches[0].clientX, event.touches[0].clientY, true);
-
-    event.preventDefault();
   }
 
   function onMouseLeave() {
