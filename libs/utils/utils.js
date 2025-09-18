@@ -1554,6 +1554,7 @@ async function loadPostLCP(config) {
           font-display: block;
           font-weight: 400 600;
           font-style: normal;
+          font-display: optional;
       }
       :root {
         --body-font-family: FrameGothic, Arial;
