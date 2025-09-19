@@ -317,17 +317,3 @@ content auhtored manually and AEM-imported content */
     padding: 0 28px;
   }
 }
-
-/* FrameIO addition */
-@media (hover: hover) {
-  .global-footer .feds-navLink:hover {
-    color: #fff;
-  }
-
-  .global-footer:hover .feds-navLink {
-    color: rgba(234,234,255,0.5);
-  }
-  .global-footer .feds-navLink:hover {
-    color: #fff;
-  }
-}

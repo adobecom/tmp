@@ -50,8 +50,8 @@
 /* Menu */
 .feds-footer-wrapper .feds-menu-headline {
   font-size: 12px; /* FrameIO update from 14px */
-  text-transform: uppercase; /* FrameIO update from none*/
-  color: rgba(233,233,255,0.7); /* FrameIO update from inherited value */
+  text-transform: uppercase; /* FrameIO addition */
+  color: rgba(233 233 255 / 70%); /* FrameIO addition */
   line-height: 1.4;
 }
 
@@ -64,7 +64,7 @@
 .feds-footer-wrapper .feds-menu-content .feds-navLink {
   padding-top: 0;
   padding-bottom: 0;
-  font-size: 16px; /* FrameIO update from inherited value */
+  font-size: 16px; /* FrameIO addition */
 }
 
 /* Options (region selector, social, privacy) */
@@ -393,7 +393,18 @@ span.feds-footer-privacyLink-divider {
   }
 }
 
-/* FrameIO addition */
+/* FrameIO overrides */
 .global-footer .feds-menu-items .feds-navLink picture {
   min-width: 30px;
+}
+
+/* FrameIO addition */
+@media (hover: hover) {
+  .global-footer:has(.feds-navLink:hover) .feds-navLink:not(:hover) {
+    color: var(--color-frameio-body--faded) !important;
+  }
+
+  .global-footer .feds-navLink:hover {
+    color: #fff;
+  }
 }

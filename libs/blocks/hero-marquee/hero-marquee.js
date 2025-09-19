@@ -284,7 +284,20 @@ export default async function init(el) {
     && allRows[1].classList.length === 0)
     ? allRows[1]
     : null;
-  if (assetUnknown) assetUnknown.classList.add('asset-unknown');
+  // if (assetUnknown) assetUnknown.classList.add('asset-unknown'); /* FrameIO comment out */
+  /* FrameIO additions until L300 */
+  const isParallaxVar = el.matches('.frameio-parallax-vids');
+
+  if (assetUnknown) {
+    const parallaxVid = assetUnknown?.querySelector('.video-container');
+    if (isParallaxVar && parallaxVid) assetUnknown.replaceWith(parallaxVid);
+    else assetUnknown.classList.add('asset-unknown');
+  }
+
+  if (isParallaxVar) {
+    const parallaxVid = copy?.querySelector('.video-container');
+    if (parallaxVid?.parentElement?.matches('p')) parallaxVid.parentElement.replaceWith(parallaxVid);
+  }
 
   decorateBlockText(copy, textDefault, 'hasDetailHeading');
   await decorateLockupFromContent(copy);

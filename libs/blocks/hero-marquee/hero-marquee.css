@@ -686,3 +686,71 @@ body.mweb-enabled .hero-marquee .con-block.row-text:has(.action-area) + .con-blo
   top: 75%;
   height: unset;
 }
+
+.hero-marquee.frameio-parallax-vids {
+  padding-block: var(--spacing-xxxl);
+
+  &.con-block .foreground {
+    position: unset;
+
+    .video-container {
+      position: absolute;
+      left: 50%;
+      z-index: 2;
+    }
+  }
+
+  .video-container .pause-play-wrapper {
+    display: none;
+  }
+
+  .foreground-media {
+    height: 100%;
+
+    video {
+      transform: translateX(25%) scale(0.9);
+    }
+  }
+
+  [class*='detail-'] {
+    color: var(--color-frameio-accent);
+  }
+
+  [class*='heading-'] {
+    margin-bottom: 20px;
+  }
+
+  [class*='body-']:has(strong) + [class*='body-'] {
+    margin-top: -10px;
+    color: var(--color-frameio-body--faded);
+  }
+
+  [class*='body-'] + [class*='body-']:has(strong) {
+    margin-top: 20px;
+  }
+}
+
+.hero-marquee.frameio-parallax-vids-reverse {
+  &.con-block .foreground {
+    .video-container {
+      left: unset;
+      right: 50%;
+      top: 0;
+    }
+  }
+
+  .foreground-media {
+    video {
+      transform: translateX(-25%) scale(0.9);
+    }
+  }
+}
+
+.hero-marquee.frameio-ambiance-video.enter-parallax.frameio-hide-vid-bottom .foreground-media video {
+  object-position: top;
+  transform: translateY(10%) scale(1.15);
+}
+
+.hero-marquee.frameio-ambiance-video.frameio-hide-vid-bottom {
+  --video-height: 650px;
+}
