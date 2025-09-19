@@ -365,7 +365,7 @@ export default async function init(el) {
   await Promise.all(promiseArr);
 
   /* FrameIO addition */
-  if (el.matches('.frameio') || el.matches('.frameio-ambiance-video')) {
+  if (el.matches('.frameio') || el.matches('.frameio-ambiance-video') || el.matches('.frameio-parallax-vids')) {
     const { addProgress } = await import('../../utils/frameio.js')
     addProgress(el);
   }

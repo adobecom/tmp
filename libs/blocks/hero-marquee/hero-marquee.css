@@ -581,6 +581,15 @@ body.mweb-enabled .hero-marquee .con-block.row-text:has(.action-area) + .con-blo
 }
 
 /* FrameIO overrides */
+/* first marquee on the page */
+.hero-marquee.frameio-video-border .video-container {
+  background-color: rgb(157 157 255 / 10%);
+  padding: 0.5rem;
+  border: 1px solid rgb(157 157 255 / 10%);
+  border-radius: 1rem;
+  backdrop-filter: blur(16px);
+}
+
 .hero-marquee .foreground-media picture img, .hero-marquee .foreground-media video {
   object-position: left top;
 }
@@ -634,7 +643,7 @@ body.mweb-enabled .hero-marquee .con-block.row-text:has(.action-area) + .con-blo
 
 .hero-marquee.frameio-ambiance-video {
   --video-height: var(--xl-min-height);
-  --parallax-y: calc(100px * (clamp(0, var(--exit-progress), 60)) / 60);
+  --parallax-y: calc(100px * (clamp(0, var(--exit-progress), 80)) / 80);
   --translate-parallax-y: translateY(var(--parallax-y));
   --translate-parallax-y-rev: translateY(calc(-var(--parallax-y)));
 
@@ -688,7 +697,7 @@ body.mweb-enabled .hero-marquee .con-block.row-text:has(.action-area) + .con-blo
 }
 
 .hero-marquee.frameio-parallax-vids {
-  padding-block: var(--spacing-xxxl);
+  padding-block: 200px;
 
   &.con-block .foreground {
     position: unset;
@@ -700,8 +709,21 @@ body.mweb-enabled .hero-marquee .con-block.row-text:has(.action-area) + .con-blo
     }
   }
 
+  .foreground .video-container {
+    height: 75%;
+    transform: translateY(calc(200px - 180px * (clamp(0, var(--enter-progress), 100)) / 100 - 100px * (clamp(0, var(--exit-progress), 100)) / 100 ));
+  }
+
   .video-container .pause-play-wrapper {
     display: none;
+  }
+
+  video {
+    background-color: rgb(157 157 255 / 5%);
+    padding: 0.5rem;
+    border: 1px solid rgb(157 157 255 / 5%);
+    border-radius: 1rem;
+    backdrop-filter: blur(16px);
   }
 
   .foreground-media {
@@ -737,6 +759,10 @@ body.mweb-enabled .hero-marquee .con-block.row-text:has(.action-area) + .con-blo
       right: 50%;
       top: 0;
     }
+  }
+
+  .foreground .video-container {
+    transform: translateY(calc(300px - 200px * (clamp(0, var(--enter-progress), 100)) / 100 - 200px * (clamp(0, var(--exit-progress), 100)) / 100 ));
   }
 
   .foreground-media {
