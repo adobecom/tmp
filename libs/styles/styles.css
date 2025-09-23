@@ -1107,3 +1107,35 @@ a.static:active  {
 @media screen and (min-width: 1440px) {
   .con-block.max-width-12-desktop-large .foreground { max-width: 1200px; }
 }
+
+/* FrameIO overrides */
+:root:has(meta[name="theme"][content="frameio"]) {
+  --button-border-color: rgb(193 194 217);
+  --button-border-color-hover: rgb(252 252 252);
+  --button-bg-color: rgb(245 245 248);
+  --button-bg-color-hover: rgb(233 233 255 / 70%);
+
+  .con-button {
+    transition: all .3s cubic-bezier(0,0.44,0.6,1);
+    background: rgb(209 209 251 / 20%);
+    color: var(--color-white);
+    border-color: rgb(157 157 255 / 5%);
+
+    &:hover, &:focus {
+      background-color: rgb(220 220 255 / 30%);
+      border-color: rgb(189 189 244 / 10%);
+    }
+  }
+
+  .con-button.blue {
+    background: var(--button-bg-color);
+    color: black;
+    border-color: var(--button-border-color);
+
+    &:hover, &:focus {
+      background-color: var(--button-bg-color-hover);
+      border-color: var(--button-border-color-hover);
+      color: black;
+    }
+  }
+}

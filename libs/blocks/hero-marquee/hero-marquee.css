@@ -730,7 +730,7 @@ body.mweb-enabled .hero-marquee .con-block.row-text:has(.action-area) + .con-blo
     height: 100%;
 
     video {
-      transform: translateX(25%) scale(0.9);
+      transform: translateX(15%) scale(0.85);
     }
   }
 
@@ -754,6 +754,10 @@ body.mweb-enabled .hero-marquee .con-block.row-text:has(.action-area) + .con-blo
 
 .hero-marquee.frameio-parallax-vids-reverse {
   &.con-block .foreground {
+    &.cols-2 {
+      grid-template-columns: minmax(55%, 1fr) minmax(45%, 1fr);
+    }
+
     .video-container {
       left: unset;
       right: 50%;
@@ -767,7 +771,7 @@ body.mweb-enabled .hero-marquee .con-block.row-text:has(.action-area) + .con-blo
 
   .foreground-media {
     video {
-      transform: translateX(-25%) scale(0.9);
+      transform: translateX(-15%) scale(0.85);
     }
   }
 }

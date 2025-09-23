@@ -1,7 +1,8 @@
 .section.merch-frameio {
+  --flex-gap: 24px;
+
   display: flex;
   flex-wrap: wrap;
-  --flex-gap: 24px;
   gap: var(--flex-gap);
   max-width: 1080px;
   margin: auto;
@@ -30,6 +31,7 @@
   & .plan-name {
     font-size: 30px;
     font-weight: 600;
+    line-height: 1.2;
   }
 
   & .purpose {
@@ -85,17 +87,14 @@
   & .cta {
     margin-top: auto;
     padding-top: 40px;
-    
+
     & a {
-      background-color: rgba(245,245,248,1);
-      color: black;
       padding: 0 24px;
-      height: 39.75px;
+      height: 40px;
       display: flex;
       justify-content: center;
       align-items: center;
-      border-radius: 100px;
-      transition: color .3s cubic-bezier(0,0.44,0.6,1);
+      border-radius: 22px;
     }
   }
 }

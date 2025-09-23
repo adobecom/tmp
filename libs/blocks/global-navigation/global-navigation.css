@@ -1642,3 +1642,24 @@ body {
     color: var(--feds-color-link) !important;
   }
 }
+
+.feds-menu-section {
+
+  h2 {
+    font-size: var(--type-heading-xxl-size);
+    line-height: var(--type-heading-xxl-lh);
+  }
+
+  .feds-navLink .feds-navLink-title {
+    font-size: 24px;
+  }
+
+  .feds-navLink--header {
+    text-transform: uppercase;
+    color: rgb(97 153 246);
+
+    .feds-navLink-title {
+      font-size: 12px;
+    }
+  }
+}
