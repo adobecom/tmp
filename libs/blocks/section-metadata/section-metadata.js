@@ -123,6 +123,7 @@ export default async function init(el) {
   if (metadata.delay) handleDelay(metadata.delay.text, section);
   if (metadata.anchor) handleAnchor(metadata.anchor.text, section);
   if (metadata.frameio) handleFrameio(metadata.frameio.text, section);
+  if (metadata['merch-frameio']) section.classList.add('merch-frameio');
   if (metadata.parallax) await handleParallax(metadata.parallax.text, section);
   addListAttrToSection(section);
 }
