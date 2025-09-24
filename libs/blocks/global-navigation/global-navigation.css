@@ -1644,7 +1644,7 @@ body {
   }
 }
 
-.feds-menu-section {
+.feds-menu-content {
 
   h2 {
     font-size: var(--type-heading-xxl-size);
@@ -1666,6 +1666,6 @@ body {
   }
 }
 
-.feds-topnav-wrapper .feds-menu-section {
+.feds-topnav-wrapper :is(.feds-menu-content--group, .feds-menu-column--group) > div {
   padding-block: 60px;
 }
