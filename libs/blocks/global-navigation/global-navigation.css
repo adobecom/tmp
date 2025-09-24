@@ -623,7 +623,7 @@ header.new-nav.global-navigation:not(:has(.feds-dropdown--active)) .feds-profile
     z-index: 1;
     box-shadow: 0 3px 3px 0 rgb(0 0 0 / 20%);
     transform: translate3d(0,0,0); /* Fix Safari issues w/ position: sticky */
-    transition: top 0.3s ease-in-out, opacity 0.3s ease-in-out; /* FrameIO addition */
+    transition: top 0.5s ease-in-out, opacity 0.5s ease-in-out; /* FrameIO addition */
     padding: 12px 0;
   }
 
@@ -1611,9 +1611,10 @@ body {
   transition: color 0.3s ease-in-out;
 }
 
-.feds-topnav-wrapper:has(.feds-navLink:hover) :is(.feds-navLink:not(:hover), .feds-signIn),
-.feds-topnav-wrapper:has(.feds-signIn:hover) :is(.feds-navLink) {
-  color: rgb(234 234 255 / 50%) !important;
+.feds-topnav-wrapper:has(.feds-nav > .feds-navItem > .feds-navLink:hover) :is(.feds-nav > .feds-navItem > .feds-navLink:not(:hover), .feds-signIn),
+.feds-topnav-wrapper:has(.feds-popup .feds-navLink:hover) :is(.feds-nav > .feds-navItem > .feds-navLink:not(:hover), .feds-popup .feds-navLink:not(:hover), .feds-signIn),
+.feds-topnav-wrapper:has(.feds-signIn:hover) :is(.feds-nav > .feds-navItem > .feds-navLink) {
+  color: rgb(234 234 255 / 50%);
 }
 
 .feds-menu-headline {
@@ -1656,10 +1657,15 @@ body {
 
   .feds-navLink--header {
     text-transform: uppercase;
-    color: rgb(97 153 246);
+    color: rgb(97 153 246) !important;
+    min-height: 24px;
 
     .feds-navLink-title {
       font-size: 12px;
     }
   }
+}
+
+.feds-topnav-wrapper .feds-menu-section {
+  padding-block: 60px;
 }
