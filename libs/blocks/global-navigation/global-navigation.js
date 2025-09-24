@@ -679,6 +679,11 @@ class Gnav {
       </div>
       `;
 
+    // FrameIO addition
+    this.elements.topnavWrapper.addEventListener('mouseleave', () => {
+      closeAllDropdowns();
+    });
+
     this.block.append(
       this.elements.curtain,
       this.elements.topnavWrapper,
@@ -1518,21 +1523,41 @@ class Gnav {
             </${tag}>`;
 
           // Toggle trigger's dropdown on click
-          dropdownTrigger.addEventListener('click', (e) => {
-            if (!isDesktop.matches && this.newMobileNav && isSectionMenu) {
-              const popup = dropdownTrigger.nextElementSibling;
-              // document.body.style.top should always be set
-              // at this point by calling disableMobileScroll
-              if (popup) {
-                this.updatePopupPosition(popup);
+          // FrameIO comment out
+          // dropdownTrigger.addEventListener('click', (e) => {
+          //   if (!isDesktop.matches && this.newMobileNav && isSectionMenu) {
+          //     const popup = dropdownTrigger.nextElementSibling;
+          //     // document.body.style.top should always be set
+          //     // at this point by calling disableMobileScroll
+          //     if (popup) {
+          //       this.updatePopupPosition(popup);
+          //     }
+          //     makeTabActive(popup);
+          //   } else if (isDesktop.matches && this.newMobileNav && isSectionMenu) {
+          //     const popup = dropdownTrigger.nextElementSibling;
+          //     if (popup) popup.style.removeProperty('top');
+          //   }
+          //   trigger({ element: dropdownTrigger, event: e, type: 'dropdown' });
+          //   setActiveDropdown(dropdownTrigger);
+          // });
+          // FrameIO addition
+          ['click', 'mouseenter'].forEach((event) => {
+            dropdownTrigger.addEventListener(event, (e) => {
+              if (!isDesktop.matches && this.newMobileNav && isSectionMenu) {
+                const popup = dropdownTrigger.nextElementSibling;
+                // document.body.style.top should always be set
+                // at this point by calling disableMobileScroll
+                if (popup) {
+                  this.updatePopupPosition(popup);
+                }
+                makeTabActive(popup);
+              } else if (isDesktop.matches && this.newMobileNav && isSectionMenu) {
+                const popup = dropdownTrigger.nextElementSibling;
+                if (popup) popup.style.removeProperty('top');
               }
-              makeTabActive(popup);
-            } else if (isDesktop.matches && this.newMobileNav && isSectionMenu) {
-              const popup = dropdownTrigger.nextElementSibling;
-              if (popup) popup.style.removeProperty('top');
-            }
-            trigger({ element: dropdownTrigger, event: e, type: 'dropdown' });
-            setActiveDropdown(dropdownTrigger);
+              trigger({ element: dropdownTrigger, event: e, type: 'dropdown' });
+              setActiveDropdown(dropdownTrigger);
+            });
           });
           // Set aria attributes
           isDesktop.addEventListener('change', () => setAriaAtributes(dropdownTrigger));

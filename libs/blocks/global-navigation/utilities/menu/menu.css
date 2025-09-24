@@ -189,7 +189,7 @@ content auhtored manually and AEM-imported content */
   }
 
   .feds-navItem--section .feds-menu-content {
-    column-gap: 12px;
+    column-gap: 100px; /* FrameIO update from 12px */
   }
 
   .feds-menu-column--wide {
